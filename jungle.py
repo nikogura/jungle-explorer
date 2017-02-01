@@ -18,13 +18,13 @@ script_url = 'https://github.com/nikogura/jungle-explorer/raw/master/jungle.py'
 app = Flask(app_name)
 
 user_data = """#!/bin/bash
-sudo yum install -y epel-release wget
+yum install -y epel-release wget
 
-sudo yum install -y python2-pip
+yum install -y python2-pip
 
 wget -O /tmp/requirements.txt %s
 
-sudo pip install -r /tmp/requirements.txt
+pip install -r /tmp/requirements.txt
 
 wget -O /tmp/jungle.py %s
 
@@ -37,7 +37,7 @@ ec2 = boto3.resource('ec2', region_name=region)
 
 @app.route('/')
 def hello_world():
-    return 'Hello World'
+    return 'Hello World\n'
 
 
 def init():
@@ -78,7 +78,7 @@ def create():
     instances = ec2.create_instances(
         ImageId=image,
         MinCount=1,
-        MaxCount=2,
+        MaxCount=1,
         KeyName=test_key_name,
         InstanceType=flavor,
         UserData=user_data,
