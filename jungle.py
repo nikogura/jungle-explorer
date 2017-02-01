@@ -100,17 +100,18 @@ def create():
 
 
 def status():
-    print "Status:"
+    print "Status:        Name | Flavor   | App    | State"
+
     for instance in ec2.instances.all():
         app_tag = ''
         for tag in instance.tags:
             if tag['Key'] == 'app':
                 app_tag = tag['Value']
-        print instance.id, instance.instance_type, app_tag
+        print "%s | %s | %s | %s" % (instance.id, instance.instance_type, app_tag, instance.state.get('Name'))
 
 
 def help_message():
-    print "jungle.py -a <action> [init|start|stop|create|destroy|nike|service]"
+    print "jungle.py -a <action> [status|create|destroy|service|test_user_data]"
 
 if __name__ == '__main__':
     action = None
@@ -128,21 +129,15 @@ if __name__ == '__main__':
         # embarassingly crude, but this is just a quickie.  I'd prefer a jump table or such.
         if action == 'init':
             init()
-        elif action == 'start':
-            start()
-        elif action == 'stop':
-            stop()
         elif action == 'destroy':
             destroy()
         elif action == 'service':
             app.run(host='0.0.0.0')
         elif action == 'test_user_data':
             test_user_data()
-        elif action == 'nike':
-            print("You chose 'nike', so I'll Just Do It.")
+        elif action == 'create':
             init()
             create()
-            # start()
         else:
             status()
 
