@@ -97,17 +97,19 @@ def create():
             ]
         )
         print(instance.id, instance.instance_type, instance.tags)
+        print "Running on %s:5000" % instance.public_dns_name
 
 
 def status():
-    print "Status:        Name | Flavor   | App    | State"
+    print "Status:        Name | Flavor   | App    | URL"
 
     for instance in ec2.instances.all():
         app_tag = ''
         for tag in instance.tags:
             if tag['Key'] == 'app':
                 app_tag = tag['Value']
-        print "%s | %s | %s | %s" % (instance.id, instance.instance_type, app_tag, instance.state.get('Name'))
+        if instance.state.get('Name') == 'running':
+            print "%s | %s | %s | %s:5000" % (instance.id, instance.instance_type, app_tag, instance.public_dns_name)
 
 
 def help_message():
