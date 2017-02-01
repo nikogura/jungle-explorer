@@ -32,6 +32,11 @@ python /tmp/jungle.py -a service
 
 """ % (requirements_url, script_url)  #really crude, I know
 
+filters = [{
+    'Name': 'tag:app',
+    'Values': [app_name]
+}]
+
 ec2 = boto3.resource('ec2', region_name=region)
 
 
@@ -56,18 +61,8 @@ def init():
 
 
 def destroy():
-    for instance in ec2.instances.all():
+    for instance in ec2.instances.filter(Filters=filters):
         instance.terminate()
-
-
-def stop():
-    # stop the vm's?  stop the services?
-    pass
-
-
-def start():
-    # start the vm's?  start the services?
-    pass
 
 
 def test_user_data():
@@ -103,7 +98,7 @@ def create():
 def status():
     print "Status:        Name | Flavor   | App    | URL"
 
-    for instance in ec2.instances.all():
+    for instance in ec2.instances.filter(Filters=filters):
         app_tag = ''
         for tag in instance.tags:
             if tag['Key'] == 'app':
@@ -146,5 +141,3 @@ if __name__ == '__main__':
     except getopt.GetoptError:
         help_message()
         sys.exit(2)
-
-# end
