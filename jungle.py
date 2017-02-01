@@ -18,13 +18,13 @@ script_url = 'https://github.com/nikogura/jungle-explorer/raw/master/jungle.py'
 app = Flask(app_name)
 
 user_data = """#!/bin/bash
-sudo yum install -y epel-release
+sudo yum install -y epel-release wget
 
 sudo yum install -y python2-pip
 
 wget -O /tmp/requirements.txt %s
 
-sudo pip install -y /tmp/requirements.txt
+sudo pip install -r /tmp/requirements.txt
 
 wget -O /tmp/jungle.py %s
 
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         elif action == 'destroy':
             destroy()
         elif action == 'service':
-            app.run()
+            app.run(host='0.0.0.0')
         elif action == 'test_user_data':
             test_user_data()
         elif action == 'nike':
