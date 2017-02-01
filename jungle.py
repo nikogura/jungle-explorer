@@ -12,8 +12,8 @@ flavor = 't2.micro'
 test_key_name = 'TestKey'
 test_key_file_name = 'TestKey.pem'
 security_group_id = 'sg-3f238d58'
-requirements_url = ''
-script_url = ''
+requirements_url = 'https://github.com/nikogura/jungle-explorer/raw/master/requirements.txt'
+script_url = 'https://github.com/nikogura/jungle-explorer/raw/master/jungle.py'
 
 app = Flask(app_name)
 
