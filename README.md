@@ -52,6 +52,21 @@ At a minimum you'll need to enable inbound access on the following:
     
 ## Usage
 
+### TL;DR;
+
+    python jungle.py -a create
+    
+Command will output the hostname of the service.
+    
+Wait a couple minutes for the VM to wake up.
+
+    python jungle.py -a provision
+    
+Hit the service any way you please
+
+    curl -i <hostname>:5000
+    
+
 ### Status
 
     python jungle.py 
@@ -61,6 +76,14 @@ At a minimum you'll need to enable inbound access on the following:
     python jungle.py -a create
     
 Output will display the url that the service can be reached on
+
+
+## Provision Secrets
+Sends secrets to the service VM.  VM needs to be up, and this takes a couple minutes.  Needs better handling, but honestly, this whole secret provisioning system is such a hack that there's no point in polishing a turd.
+
+In reality, we'd use a real secret provisioning system like Vault.  This is just a hack.
+
+    python jungle.py -a provision
     
 ### Destroy Service
 

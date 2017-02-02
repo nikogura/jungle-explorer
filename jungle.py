@@ -243,7 +243,7 @@ def help_message():
     Prints help message
     :return:
     '''
-    print "jungle.py -a <action> [status|create|destroy|service|test_user_data]"
+    print "jungle.py -a <action> [status|create|destroy|provision|service|test_user_data]"
 
 if __name__ == '__main__':
     action = None
@@ -258,7 +258,6 @@ if __name__ == '__main__':
             elif opt in ("-a", "--action"):
                 action = arg
 
-        # embarassingly crude, but this is just a quickie.  I'd prefer a jump table or such.
         if action == 'init':
             init()
         elif action == 'destroy':
