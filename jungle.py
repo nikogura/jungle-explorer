@@ -157,7 +157,7 @@ def provision_secrets():
     for instance in ec2.instances.filter(Filters=filters):
         if instance.state.get('Name') == 'terminated':
             next
-        if instance.state.get('Name') == 'shutting-down':
+        elif instance.state.get('Name') == 'shutting-down':
             next
         elif instance.state.get('Name') == 'running':
             print "Crudely Provisioning Secrets.  In reality we'd use a proper secrets manager."
