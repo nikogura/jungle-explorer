@@ -2,4 +2,4 @@
 
 PYTHON=$(which python)
 
-$PYTHON -c "__import__('compiler').parse(open('../jungle.py').read())"
+$PYTHON -c "__import__('compiler').parse(open('jungle.py').read())"
