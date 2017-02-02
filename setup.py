@@ -13,8 +13,7 @@ setup(
     url="https://github.com/nikogura/jungle-explorer",
 
     install_requires=[
-        'boto3'
-        'flask'
-    ]
-
+        'boto3==1.4.4',
+        'flask==0.12'
+    ],
 )

@@ -1,17 +1,14 @@
-import sys
-import boto3
-import getopt
-import json
-from flask import Flask
-import logging
-from logging.handlers import RotatingFileHandler
+#! /usr/bin/env python
 
 # ***************************************  Start User Config ******************************
-# app name.  Used to tag instances.  Instances are destroyed via this name, so choose it wisely.
-app_name = 'jungle'
+# security group id you're creating instances under (Required to allow access to the service, and the user-data that starts the service)
+security_group_id = 'sg-3f238d58'
 
 # aws region
 region = 'us-west-1'
+
+# app name.  Used to tag instances.  Instances are destroyed via this name, so choose it wisely.
+app_name = 'jungle'
 
 #image for this service to use (must be RH derived)
 image = 'ami-af4333cf'
@@ -20,13 +17,10 @@ image = 'ami-af4333cf'
 flavor = 't2.micro'
 
 # name of the SSH Key in AWS
-test_key_name = 'TestKey'
+test_key_name = 'JungleKey'
 
 # name of the SSH Key file stored locally
-test_key_file_name = 'TestKey.pem'
-
-# security group id you're creating instances under (Required to allow access to the service, and the user-data that starts the service)
-security_group_id = 'sg-3f238d58'
+test_key_file_name = 'JungleKey.pem'
 
 # requirements file for running this script
 requirements_url = 'https://github.com/nikogura/jungle-explorer/raw/master/requirements.txt'
@@ -37,8 +31,16 @@ script_url = 'https://github.com/nikogura/jungle-explorer/raw/master/jungle.py'
 # The tag linking the Autoscaling Group to the Launch Config
 deploy_tag = 'deploymentName'
 
-
 # ************************** End User Config ***************************************
+
+import sys
+import os
+import boto3
+import getopt
+import json
+from flask import Flask
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(app_name)
 
@@ -91,6 +93,7 @@ def init():
     except:
         with open(test_key_file_name, 'w') as f:
             key_pair = ec2.create_key_pair(KeyName=test_key_name)
+            os.chmod(test_key_file_name, 0o600)
             f.write(str(key_pair.key_material))
 
         print "Key Created and saved to "+ test_key_file_name
@@ -235,7 +238,7 @@ if __name__ == '__main__':
         elif action == 'destroy':
             destroy()
         elif action == 'service':
-            handler = RotatingFileHandler('%s.log' % app_name, maxBytes=10000, backupCount=1)
+            handler = RotatingFileHandler('/tmp/%s.log' % app_name, maxBytes=10000, backupCount=1)
             handler.setLevel(logging.DEBUG)
             app.logger.addHandler(handler)
             app.run(host='0.0.0.0')
