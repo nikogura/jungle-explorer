@@ -13,7 +13,11 @@ app_name = 'jungle'
 #image for this service to use (must be RH derived)
 image = 'ami-af4333cf'
 
+# user on the service VM
 user = 'centos'
+
+# local credentials file name
+credential_file_name = 'credentials'
 
 # size of box to create
 flavor = 't2.micro'
@@ -43,6 +47,8 @@ import json
 from flask import Flask
 import logging
 from logging.handlers import RotatingFileHandler
+import subprocess
+import time
 
 app = Flask(app_name)
 '''
@@ -59,7 +65,7 @@ pip install -r /tmp/requirements.txt
 
 wget -O /tmp/jungle.py %s
 
-runuser -l %s -c python /tmp/jungle.py -a service
+runuser -l -c "python /tmp/jungle.py -a service" %s
 
 """ % (requirements_url, script_url, user)
 
@@ -145,6 +151,23 @@ def create():
         )
         print(instance.id, instance.instance_type, instance.tags)
         print "Running on %s:5000" % instance.public_dns_name
+
+
+def provision_secrets():
+    for instance in ec2.instances.filter(Filters=filters):
+        if instance.state.get('Name') == 'terminated':
+            next
+        elif instance.state.get('Name') == 'running':
+            print "Crudely Provisioning Secrets.  In reality we'd use a proper secrets manager."
+
+            cmd1 = ['ssh', '-o', 'StrictHostKeyChecking=no', '-i', test_key_file_name, '%s@%s' % (user, instance.public_dns_name), 'mkdir', '-p', '.aws']
+            cmd2 = ['scp', '-i', test_key_file_name,  credential_file_name, '%s@%s:.aws/credentials' % (user, instance.public_dns_name)]
+
+            subprocess.call(cmd1)
+            subprocess.call(cmd2)
+
+        else:
+            print "Instance not fully up yet.  Try again in a few seconds.  Sorry."
 
 
 def autoscaling_info():
@@ -249,6 +272,8 @@ if __name__ == '__main__':
             print autoscaling_info()
         elif action == 'lg':
             print launch_group_info()
+        elif action == 'provision':
+            provision_secrets()
         elif action == 'create':
             init()
             create()
