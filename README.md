@@ -36,6 +36,8 @@ At a minimum you'll need to enable inbound access on the following:
 
 * *image* AMI image for this service to use (must be RH derived)
 
+* *user* User on the VM to run the service as
+
 * *flavor* The name of the size/power/base config of VM to create.
 
 * *test_key_name* The name of the SSH Key in AWS

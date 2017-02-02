@@ -13,6 +13,8 @@ app_name = 'jungle'
 #image for this service to use (must be RH derived)
 image = 'ami-af4333cf'
 
+user = 'centos'
+
 # size of box to create
 flavor = 't2.micro'
 
@@ -57,9 +59,9 @@ pip install -r /tmp/requirements.txt
 
 wget -O /tmp/jungle.py %s
 
-python /tmp/jungle.py -a service
+runuser -l %s -c python /tmp/jungle.py -a service
 
-""" % (requirements_url, script_url)
+""" % (requirements_url, script_url, user)
 
 filters = [{
     'Name': 'tag:app',
