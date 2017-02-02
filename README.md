@@ -10,13 +10,61 @@ Micro service to return information about EC2 Auto Scaling groups and their Laun
 
 It's more of a record of the author's exploration of the AWS API than anything else.  If this was to be used in anger, I'd like to make it a little less crude and not rely on things like user_data to launch the service.  If the launch and the app weren't baked into the AMI itself, we'd have to account for start/stop/restart of the service without nuking the instance entirely.
 
-## Installation
+## Usage
+
+### Clone repo
 
     git clone git@github.com:nikogura/jungle-explorer.git
     
-    pip install -e jungle-explorer
+### CD into the repo
+
+    cd jungle-explorer
     
-### Configuration
+### Install prereqs.  Either of the following will work:
+
+    pip install -r requirements.txt
+    
+Or
+
+    pip install -e .
+    
+    
+### Edit the Config with your favorite editor
+See 'Configuration Reference' below
+
+    vi jungle.py
+    
+### Create the Service VMs
+
+    python jungle.py -a create
+    
+Command will output the hostname of the service.
+    
+### Provision Service VM
+Wait a couple minutes for the VM to wake up.  VM needs to be up, and this takes a couple minutes. 
+
+This will send your secrets to the VM.  This is very crude, for demonstration purposes.
+
+    python jungle.py -a provision
+    
+Needs better handling, but honestly, this whole secret provisioning system is such a hack that there's no point in polishing a turd. In reality, we'd use a real secret provisioning system like Vault.  This is just a hack.
+    
+### Use Service
+Hit the service any way you please
+
+    curl -i <hostname>:5000
+    
+    
+### Get Status of Service
+
+    python jungle.py 
+    
+
+### Destroy Service
+
+    python jungle.py -a destroy
+
+### Configuration Reference
 Near the top of 'jungle.py' you'll see some configuration options.  You'll have to modify them for your own usage.  Inside you'll see my defaults.
 
 * *security_group_id*  This is the security group id you're creating instances under (Required to allow access to the service, and the user-data that starts the service) The default in the script is mine.  Your setup will be different.
@@ -52,56 +100,3 @@ At a minimum you'll need to enable inbound access on the following:
 
 * *deploy_tag* The tag linking the Autoscaling Group to the Launch Config
     
-## Usage
-
-### Clone repo
-
-    git clone git@github.com:nikogura/jungle-explorer.git
-    
-### CD into the repo
-
-    cd jungle-explorer
-    
-### Install prereqs.  Either of the following will work:
-
-    pip install -r requirements.txt
-    
-Or
-
-    pip install -e .
-    
-    
-### Edit the Config with your favorite editor
-
-    vi jungle.py
-    
-### Create the Service VMs
-
-    python jungle.py -a create
-    
-Command will output the hostname of the service.
-    
-### Provision Service VM
-Wait a couple minutes for the VM to wake up.  VM needs to be up, and this takes a couple minutes. 
-
-This will send your secrets to the VM.  This is very crude, for demonstration purposes.
-
-    python jungle.py -a provision
-    
-Needs better handling, but honestly, this whole secret provisioning system is such a hack that there's no point in polishing a turd. In reality, we'd use a real secret provisioning system like Vault.  This is just a hack.
-    
-### Use Service
-Hit the service any way you please
-
-    curl -i <hostname>:5000
-    
-    
-### Get Status of Service
-
-    python jungle.py 
-    
-
-### Destroy Service
-
-    python jungle.py -a destroy
-
