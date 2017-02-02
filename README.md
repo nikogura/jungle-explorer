@@ -28,6 +28,18 @@ Or
 
     pip install -e .
     
+### Write Credentials File
+AWS uses a credentials file at the path ~/.aws/credentials
+
+It's content looks like this:
+
+    [default]
+    aws_access_key_id=<some key>
+    aws_secret_access_key=<some other key>
+    
+You'll need to work up a file that fits your access and security needs or nothing is going to work for you.
+
+The file is expected to be in the same directory as jungle.py, and will get pushed to the service VM in /home/<run user>/.aws/credentials where the AWS API will find it and do it's thing.
     
 ### Edit the Config with your favorite editor
 See 'Configuration Reference' below
