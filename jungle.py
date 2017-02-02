@@ -3,6 +3,8 @@ import boto3
 import getopt
 import json
 from flask import Flask
+import logging
+from logging.handlers import RotatingFileHandler
 
 # ***************************************  Start User Config ******************************
 # app name.  Used to tag instances.  Instances are destroyed via this name, so choose it wisely.
@@ -233,6 +235,9 @@ if __name__ == '__main__':
         elif action == 'destroy':
             destroy()
         elif action == 'service':
+            handler = RotatingFileHandler('%s.log' % app_name, maxBytes=10000, backupCount=1)
+            handler.setLevel(logging.DEBUG)
+            app.logger.addHandler(handler)
             app.run(host='0.0.0.0')
         elif action == 'test_user_data':
             test_user_data()
