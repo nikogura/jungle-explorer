@@ -3,6 +3,8 @@
 ## Name
 I had to call it something.  \*shrug\*
 
+## Build Status: [![CircleCI](https://circleci.com/gh/nikogura/jungle-explorer.svg?style=svg)](https://circleci.com/gh/nikogura/jungle-explorer)
+
 ## Purpose
 Micro service to return information about EC2 Auto Scaling groups and their Launch Configs.
 
