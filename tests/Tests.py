@@ -5,10 +5,11 @@ class AppTest(unittest.TestCase):
 
     def testInit(self):
         self.assertEqual(1, 1)
-        subprocess.check_output(
-            "/usr/bin/env python -m py_compile ../jungle.py",
-            stderr=subprocess.STDOUT,
-            shell=True)
-
+        subprocess.check_call([
+            "python",
+            "-c",
+            "__import__('compiler').parse(open('../jungle.py').read())"
+          ]
+        )
 if __name__ == '__main__':
     unittest.main()

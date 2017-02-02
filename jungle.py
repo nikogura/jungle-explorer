@@ -43,7 +43,6 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 app = Flask(app_name)
-
 '''
     Call this the "poor man's config management"  Starts the service when the VM boots
 '''
