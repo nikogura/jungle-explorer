@@ -38,6 +38,8 @@ At a minimum you'll need to enable inbound access on the following:
 
 * *user* User on the VM to run the service as
 
+* *credential_file_name*  The name of your credentials file
+
 * *flavor* The name of the size/power/base config of VM to create.
 
 * *test_key_name* The name of the SSH Key in AWS
@@ -52,44 +54,54 @@ At a minimum you'll need to enable inbound access on the following:
     
 ## Usage
 
-### TL;DR;
+### Clone repo
+
+    git clone git@github.com:nikogura/jungle-explorer.git
+    
+### CD into the repo
+
+    cd jungle-explorer
+    
+### Install prereqs.  Either of the following will work:
+
+    pip install -r requirements.txt
+    
+Or
+
+    pip install -e .
+    
+    
+### Edit the Config with your favorite editor
+
+    vi jungle.py
+    
+### Create the Service VMs
 
     python jungle.py -a create
     
 Command will output the hostname of the service.
     
-Wait a couple minutes for the VM to wake up.
+### Provision Service VM
+Wait a couple minutes for the VM to wake up.  VM needs to be up, and this takes a couple minutes. 
+
+This will send your secrets to the VM.  This is very crude, for demonstration purposes.
 
     python jungle.py -a provision
     
+Needs better handling, but honestly, this whole secret provisioning system is such a hack that there's no point in polishing a turd. In reality, we'd use a real secret provisioning system like Vault.  This is just a hack.
+    
+### Use Service
 Hit the service any way you please
 
     curl -i <hostname>:5000
     
-
-### Status
+    
+### Get Status of Service
 
     python jungle.py 
     
-### Create Service
 
-    python jungle.py -a create
-    
-Output will display the url that the service can be reached on
-
-
-## Provision Secrets
-Sends secrets to the service VM.  VM needs to be up, and this takes a couple minutes.  Needs better handling, but honestly, this whole secret provisioning system is such a hack that there's no point in polishing a turd.
-
-In reality, we'd use a real secret provisioning system like Vault.  This is just a hack.
-
-    python jungle.py -a provision
-    
 ### Destroy Service
 
     python jungle.py -a destroy
 
-##  Access
-Access is via http on port 5000 such as:
-
-    curl -i ec2-54-193-12-243.us-west-1.compute.amazonaws.com:5000
